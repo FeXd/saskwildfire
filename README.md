@@ -1,6 +1,7 @@
 # Sask Wildfire Bot  
-🤖 Bot propogating #sk #wildfire information c/o https://saskatchewan.ca/fire  
-⏰ Tweets daily & when info changes  
+🤖 Bot to propogate #sk #wildfire information
+🔥 Data Source: https://saskatchewan.ca/fire
+⏰ Checks for updates every hour or so
 💻 Maintained by [@FeXd](https://github.com/FeXd)  
 🐣 https://twitter.com/SaskWildfire  
 
@@ -9,6 +10,7 @@
 **Sask Wildfire Bot** is a [Twitter bot](https://en.wikipedia.org/wiki/Twitter_bot) dedicated to **propogating Saskatchewan wildfire information**.  
 It is written in [Python 3](https://www.python.org/) and uses the following packages:
 - [urllib](https://docs.python.org/3/library/urllib.html) to pull information from the [Saskatchewan Public Safety Agency](https://saskatchewan.ca/fire)
+- [pdf2image](https://github.com/Belval/pdf2image) to convert pdfs into jpg images
 - [python-dotenv](https://github.com/theskumar/python-dotenv) to set environment variables from a `.env` file
 
 _The Saskatchewan Public Safety Agency_ does a great job updating wildfire status information [here](https://www.saskpublicsafety.ca/emergencies-and-response/wildfire-status)... But most of the information including Active Wildfire Map, Current Fire Bans, Daily Fire Danger Map, and Fire Danger Map Tomorrow is stored in a _.pdf_ format.
@@ -19,6 +21,9 @@ This bot allows people to subscribe to notifications from [@SaskWildfire](https:
 ## 💻 Dependencies & Installation
 - [Python 3](https://www.python.org/) with [pip](https://pypi.org/project/pip/)
      - run `pip install -r requirements.txt`
+- [Poppler](https://github.com/freedesktop/poppler)
+     - run `brew install poppler` on macOS
+     - (this is required for pdf conversion using pdf2image)
 - Twitter Authentication Tokens via a [Twitter Developer Account](https://developer.twitter.com/)
      - Create a `.env` file with these tokens in the root of the directory
      - ([Tweepy](https://www.tweepy.org/) has good documentation on retrieving those [here](https://docs.tweepy.org/en/latest/auth_tutorial.html))
