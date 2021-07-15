@@ -3,7 +3,9 @@ import shutil
 import filecmp
 import os
 import tweepy
+import time
 import datetime
+import random
 from pdf2image import convert_from_path
 from dotenv import load_dotenv
 
@@ -65,13 +67,17 @@ def tweet(title, image):
 
 
 if __name__ == '__main__':
+    print('Sask Wildfire Bot is now running...')
     load_dotenv()
-    for item in fire_data:
-        move_file('./pdf/', item['pdf'], './old/')
-        download_file(fire_url, './pdf/', item['pdf'])
-        if not os.path.isfile('./old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './old/' + item['pdf'], shallow=True):
-            print('Updated File!', item['pdf'])
-            generate_images_from_pdf('./pdf/', item['pdf'], './image/')
-            tweet(item['title'], './image/'+item['pdf']+'0.jpg')
-        else:
-            print('No Changes: ', item['pdf'])
+    while True:
+        for item in fire_data:
+            time.sleep(random.randint(60, 120))  # wait 1 or 2 minutes
+            move_file('./pdf/', item['pdf'], './old/')
+            download_file(fire_url, './pdf/', item['pdf'])
+            if not os.path.isfile('./old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './old/' + item['pdf'], shallow=True):
+                print('Updated File!', item['pdf'])
+                generate_images_from_pdf('./pdf/', item['pdf'], './image/')
+                tweet(item['title'], './image/'+item['pdf']+'0.jpg')
+            else:
+                print('No Changes: ', item['pdf'])
+        time.sleep(random.randint(1800, 3600))  # wait 30 to 60 minutes
