@@ -1,4 +1,5 @@
 import requests
+import shutil
 from pdf2image import convert_from_path
 
 fire_url = 'http://environment.gov.sk.ca/firefiles/'
@@ -19,6 +20,11 @@ def download_files(url, path, files):
         write_file.close()
 
 
+def move_files(path, files, new_path):
+    for file in files:
+        shutil.move(path+file, new_path+file)
+
+
 def generate_images_from_pdfs(in_path, pdfs, out_path):
     for pdf in pdfs:
         images = convert_from_path(in_path+pdf)
@@ -28,5 +34,6 @@ def generate_images_from_pdfs(in_path, pdfs, out_path):
 
 
 if __name__ == '__main__':
+    move_files('./pdf/', fire_pdfs, './old/')
     download_files(fire_url, './pdf/', fire_pdfs)
     generate_images_from_pdfs('./pdf/', fire_pdfs, './image/')
