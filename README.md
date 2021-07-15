@@ -1,7 +1,7 @@
 # Sask Wildfire Bot  
-🤖 Bot to propogate #sk #wildfire information
-🔥 Data Source: https://saskatchewan.ca/fire
-⏰ Checks for updates every hour or so
+🤖 Bot to propogate #sk #wildfire information  
+🔥 Data Source: https://saskatchewan.ca/fire  
+⏰ Checks for updates every hour or so  
 💻 Maintained by [@FeXd](https://github.com/FeXd)  
 🐣 https://twitter.com/SaskWildfire  
 
