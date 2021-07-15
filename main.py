@@ -6,11 +6,23 @@ from pdf2image import convert_from_path
 
 fire_url = 'http://environment.gov.sk.ca/firefiles/'
 
-fire_pdfs = [
-    'activefires.pdf',
-    'MunicipalFireBans.pdf',
-    'DailyFireDangerMaps/today_fwi.pdf',
-    'DailyFireDangerMaps/tomorrow_fwi.pdf',
+fire_data = [
+    {
+        'pdf': 'activefires.pdf',
+        'title': 'Saskatchewan Daily Wildfire Situation Map',
+    },
+    {
+        'pdf': 'MunicipalFireBans.pdf',
+        'title': 'Saskatchewan Fire Ban Map',
+    },
+    {
+        'pdf': 'DailyFireDangerMaps/today_fwi.pdf',
+        'title': "Saskatchewan Spatial Fire Management System: Today's Forecast",
+    },
+    {
+        'pdf': 'DailyFireDangerMaps/tomorrow_fwi.pdf',
+        'title': "Saskatchewan Spatial Fire Management System: Tomorrow Early Forecast",
+    },
 ]
 
 
@@ -29,16 +41,16 @@ def move_file(path, file, new_path):
 def generate_images_from_pdf(in_path, pdf, out_path):
     images = convert_from_path(in_path+pdf)
     for i, image in enumerate(images):
-        fname = pdf+str(i)+'.jpg'
-        image.save(out_path+fname, "JPEG")
+        filename = pdf+str(i)+'.jpg'
+        image.save(out_path+filename, "JPEG")
 
 
 if __name__ == '__main__':
-    for pdf in fire_pdfs:
-        move_file('./pdf/', pdf, './old/')
-        download_file(fire_url, './pdf/', pdf)
-        if not filecmp.cmp('./pdf/' + pdf, './old/' + pdf, shallow=True):
-            print('Updated File!', pdf)
-            generate_images_from_pdf('./pdf/', pdf, './image/')
+    for item in fire_data:
+        move_file('./pdf/', item['pdf'], './old/')
+        download_file(fire_url, './pdf/', item['pdf'])
+        if not filecmp.cmp('./pdf/' + item['pdf'], './old/' + item['pdf'], shallow=True):
+            print('Updated File!', item['pdf'])
+            generate_images_from_pdf('./pdf/', item['pdf'], './image/')
         else:
-            print('No Changes: ', pdf)
+            print('No Changes: ', item['pdf'])
