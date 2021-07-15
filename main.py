@@ -2,7 +2,12 @@ import requests
 import shutil
 import filecmp
 import os
+import tweepy
+import datetime
 from pdf2image import convert_from_path
+from dotenv import load_dotenv
+
+tweet_url = 'https://saskatchewan.ca/fire'
 
 fire_url = 'http://environment.gov.sk.ca/firefiles/'
 
@@ -21,7 +26,7 @@ fire_data = [
     },
     {
         'pdf': 'DailyFireDangerMaps/tomorrow_fwi.pdf',
-        'title': "Saskatchewan Spatial Fire Management System: Tomorrow Early Forecast",
+        'title': "Saskatchewan Spatial Fire Management System: Tomorrow Forecast",
     },
 ]
 
@@ -45,12 +50,28 @@ def generate_images_from_pdf(in_path, pdf, out_path):
         image.save(out_path+filename, "JPEG")
 
 
+def tweet(title, image):
+    auth = tweepy.OAuthHandler(os.getenv('CONSUMER_KEY'), os.getenv('CONSUMER_SECRET'))
+    auth.set_access_token(os.getenv('ACCESS_TOKEN'), os.getenv('ACCESS_TOKEN_SECRET'))
+
+    status = title + '\n\nUpdate Detected: ' + datetime.datetime.now().strftime('%d %b %Y %I:%M %p CST') + '\n\n More info at: ' + tweet_url
+
+    try:
+        api = tweepy.API(auth)
+        api.update_with_media(image, status)
+        print('Tweet:', status.replace('\n', ''))
+    except tweepy.TweepError as error:
+        print('Error: update_status: Something went wrong!', error)
+
+
 if __name__ == '__main__':
+    load_dotenv()
     for item in fire_data:
         move_file('./pdf/', item['pdf'], './old/')
         download_file(fire_url, './pdf/', item['pdf'])
-        if not filecmp.cmp('./pdf/' + item['pdf'], './old/' + item['pdf'], shallow=True):
+        if not os.path.isfile('./old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './old/' + item['pdf'], shallow=True):
             print('Updated File!', item['pdf'])
             generate_images_from_pdf('./pdf/', item['pdf'], './image/')
+            tweet(item['title'], './image/'+item['pdf']+'0.jpg')
         else:
             print('No Changes: ', item['pdf'])
