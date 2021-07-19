@@ -63,7 +63,7 @@ def tweet(title, image):
     auth = tweepy.OAuthHandler(os.getenv('CONSUMER_KEY'), os.getenv('CONSUMER_SECRET'))
     auth.set_access_token(os.getenv('ACCESS_TOKEN'), os.getenv('ACCESS_TOKEN_SECRET'))
 
-    hashtags = '#sk #wildfire #skwildfire'
+    hashtags = '#sk #wildfire #skwildfire #skfires'
     status = title + '\n\nUpdate Detected: ' + datetime.datetime.now().strftime('%d %b %Y %I:%M %p CST') + '\n\nMore info at: ' + tweet_url + '\n\n' + hashtags
 
     try:
