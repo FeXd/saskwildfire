@@ -63,7 +63,8 @@ def tweet(title, image):
     auth = tweepy.OAuthHandler(os.getenv('CONSUMER_KEY'), os.getenv('CONSUMER_SECRET'))
     auth.set_access_token(os.getenv('ACCESS_TOKEN'), os.getenv('ACCESS_TOKEN_SECRET'))
 
-    status = title + '\n\nUpdate Detected: ' + datetime.datetime.now().strftime('%d %b %Y %I:%M %p CST') + '\n\n More info at: ' + tweet_url
+    hashtags = '#sk #wildfire #skwildfire'
+    status = title + '\n\nUpdate Detected: ' + datetime.datetime.now().strftime('%d %b %Y %I:%M %p CST') + '\n\nMore info at: ' + tweet_url + '\n\n' + hashtags
 
     try:
         api = tweepy.API(auth)
