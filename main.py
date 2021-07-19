@@ -52,7 +52,7 @@ def generate_images_from_pdf(in_path, pdf, out_path):
         image.save(out_path+filename, "PNG")
 
 
-def image_history(image, path, new_path):
+def image_history(path, image, new_path):
     if os.path.isfile(path+image):
         shutil.copy(path+image, new_path + datetime.datetime.now().strftime('%y%m%d-%H:%M-') + image)
 
