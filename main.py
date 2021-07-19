@@ -54,7 +54,7 @@ def generate_images_from_pdf(in_path, pdf, out_path):
 
 def image_history(path, image, new_path):
     if os.path.isfile(path+image):
-        shutil.copy(path+image, new_path + datetime.datetime.now().strftime('%y%m%d-%H:%M-') + image)
+        shutil.copy(path+image, new_path + datetime.datetime.now().strftime('%y%m%d-%H%M-') + image)
 
 
 def tweet(title, image):
@@ -81,14 +81,18 @@ if __name__ == '__main__':
     while True:
         for item in fire_data:
             time.sleep(random.randint(60, 120))  # wait 1 or 2 minutes
-            move_file('./pdf/', item['pdf'], './old/')
+            move_file('./pdf/', item['pdf'], './pdf_old/')
+            move_file('./image/', item['pdf']+'0.png', './image_old/')
             download_file(fire_url, './pdf/', item['pdf'])
-            if not os.path.isfile('./old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './old/' + item['pdf'], shallow=True):
-                log('Updated File!', item['pdf'])
+            if not os.path.isfile('./pdf_old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './pdf_old/' + item['pdf'], shallow=True):
+                log('PDF is different: ', item['pdf'])
                 generate_images_from_pdf('./pdf/', item['pdf'], './image/')
-                tweet(item['title'], './image/'+item['pdf']+'0.png')
-                image_history('./image/', item['pdf']+'0.png', './history/')
+                image_history('./image/', item['pdf'] + '0.png', './history/')
+                if not os.path.isfile('./image_old/'+item['pdf']+'0.png') or not filecmp.cmp('./image/' + item['pdf'] + '0.png', './image_old/' + item['pdf'] + '0.png', shallow=False):
+                    tweet(item['title'], './image/'+item['pdf']+'0.png')
+                else:
+                    log('No Image Changes: ', item['pdf'])
             else:
-                log('No Changes: ', item['pdf'])
+                log('No PDF Changes: ', item['pdf'])
         time.sleep(random.randint(1800, 3600))  # wait 30 to 60 minutes
 
