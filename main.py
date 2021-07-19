@@ -52,6 +52,11 @@ def generate_images_from_pdf(in_path, pdf, out_path):
         image.save(out_path+filename, "PNG")
 
 
+def image_history(image, path, new_path):
+    if os.path.isfile(path+image):
+        shutil.copy(path+image, new_path + datetime.datetime.now().strftime('%y%m%d-%H:%M-') + image)
+
+
 def tweet(title, image):
     auth = tweepy.OAuthHandler(os.getenv('CONSUMER_KEY'), os.getenv('CONSUMER_SECRET'))
     auth.set_access_token(os.getenv('ACCESS_TOKEN'), os.getenv('ACCESS_TOKEN_SECRET'))
@@ -78,6 +83,7 @@ if __name__ == '__main__':
                 print('Updated File!', item['pdf'])
                 generate_images_from_pdf('./pdf/', item['pdf'], './image/')
                 tweet(item['title'], './image/'+item['pdf']+'0.png')
+                image_history('./image/', item['pdf']+'0.png', './history/')
             else:
                 print('No Changes: ', item['pdf'])
         time.sleep(random.randint(1800, 3600))  # wait 30 to 60 minutes
