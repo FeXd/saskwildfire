@@ -11,23 +11,25 @@ from dotenv import load_dotenv
 
 tweet_url = 'https://saskatchewan.ca/fire'
 
-fire_url = 'http://environment.gov.sk.ca/firefiles/'
-
 fire_data = [
     {
         'pdf': 'activefires.pdf',
+        'path': 'http://environment.gov.sk.ca/firefiles/',
         'title': 'Saskatchewan Daily Wildfire Situation Map',
     },
     {
         'pdf': 'MunicipalFireBans.pdf',
+        'path': 'http://environment.gov.sk.ca/firefiles/',
         'title': 'Saskatchewan Fire Ban Map',
     },
     {
-        'pdf': 'DailyFireDangerMaps/today_fwi.pdf',
+        'pdf': 'today_fwi.pdf',
+        'path': 'http://environment.gov.sk.ca/firefiles/DailyFireDangerMaps/',
         'title': "Saskatchewan Spatial Fire Management System: Today's Forecast",
     },
     {
-        'pdf': 'DailyFireDangerMaps/tomorrow_fwi.pdf',
+        'pdf': 'tomorrow_fwi.pdf',
+        'path': 'http://environment.gov.sk.ca/firefiles/DailyFireDangerMaps/',
         'title': "Saskatchewan Spatial Fire Management System: Tomorrow Forecast",
     },
 ]
@@ -48,36 +50,52 @@ def move_file(path, file, new_path):
 def generate_images_from_pdf(in_path, pdf, out_path):
     images = convert_from_path(in_path+pdf)
     for i, image in enumerate(images):
-        filename = pdf+str(i)+'.jpg'
-        image.save(out_path+filename, "JPEG")
+        filename = pdf+str(i)+'.png'
+        image.save(out_path+filename, "PNG")
+
+
+def image_history(path, image, new_path):
+    if os.path.isfile(path+image):
+        shutil.copy(path+image, new_path + datetime.datetime.now().strftime('%y%m%d-%H%M-') + image)
 
 
 def tweet(title, image):
     auth = tweepy.OAuthHandler(os.getenv('CONSUMER_KEY'), os.getenv('CONSUMER_SECRET'))
     auth.set_access_token(os.getenv('ACCESS_TOKEN'), os.getenv('ACCESS_TOKEN_SECRET'))
 
-    status = title + '\n\nUpdate Detected: ' + datetime.datetime.now().strftime('%d %b %Y %I:%M %p CST') + '\n\n More info at: ' + tweet_url
+    hashtags = '#sk #wildfire #skwildfire'
+    status = title + '\n\nUpdate Detected: ' + datetime.datetime.now().strftime('%d %b %Y %I:%M %p CST') + '\n\nMore info at: ' + tweet_url + '\n\n' + hashtags
 
     try:
         api = tweepy.API(auth)
         api.update_with_media(image, status)
-        print('Tweet:', status.replace('\n', ''))
+        log('Tweet:', status.replace('\n', ''))
     except tweepy.TweepError as error:
-        print('Error: update_status: Something went wrong!', error)
+        log('Error: update_status: Something went wrong!', error)
+
+
+def log(text1, text2='', text3=''):
+    print(f"{datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')}: {text1} {text2} {text3}")
 
 
 if __name__ == '__main__':
-    print('Sask Wildfire Bot is now running...')
+    log('Sask Wildfire Bot is now running...')
     load_dotenv()
     while True:
         for item in fire_data:
             time.sleep(random.randint(60, 120))  # wait 1 or 2 minutes
-            move_file('./pdf/', item['pdf'], './old/')
-            download_file(fire_url, './pdf/', item['pdf'])
-            if not os.path.isfile('./old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './old/' + item['pdf'], shallow=True):
-                print('Updated File!', item['pdf'])
+            move_file('./pdf/', item['pdf'], './pdf_old/')
+            move_file('./image/', item['pdf']+'0.png', './image_old/')
+            download_file(item['path'], './pdf/', item['pdf'])
+            if not os.path.isfile('./pdf_old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './pdf_old/' + item['pdf'], shallow=True):
+                log('PDF is different: ', item['pdf'])
                 generate_images_from_pdf('./pdf/', item['pdf'], './image/')
-                tweet(item['title'], './image/'+item['pdf']+'0.jpg')
+                image_history('./image/', item['pdf'] + '0.png', './history/')
+                if not os.path.isfile('./image_old/'+item['pdf']+'0.png') or not filecmp.cmp('./image/' + item['pdf'] + '0.png', './image_old/' + item['pdf'] + '0.png', shallow=False):
+                    tweet(item['title'], './image/'+item['pdf']+'0.png')
+                else:
+                    log('No Image Changes: ', item['pdf'])
             else:
-                print('No Changes: ', item['pdf'])
+                log('No PDF Changes: ', item['pdf'])
         time.sleep(random.randint(1800, 3600))  # wait 30 to 60 minutes
+

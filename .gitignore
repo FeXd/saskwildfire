@@ -2,5 +2,7 @@
 .env
 __pycache__
 /image/*
-/old/*
+/image_old/*
 /pdf/*
+/pdf_old/*
+/history/*
