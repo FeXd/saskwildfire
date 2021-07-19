@@ -48,8 +48,8 @@ def move_file(path, file, new_path):
 def generate_images_from_pdf(in_path, pdf, out_path):
     images = convert_from_path(in_path+pdf)
     for i, image in enumerate(images):
-        filename = pdf+str(i)+'.jpg'
-        image.save(out_path+filename, "JPEG")
+        filename = pdf+str(i)+'.png'
+        image.save(out_path+filename, "PNG")
 
 
 def tweet(title, image):
@@ -77,7 +77,7 @@ if __name__ == '__main__':
             if not os.path.isfile('./old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './old/' + item['pdf'], shallow=True):
                 print('Updated File!', item['pdf'])
                 generate_images_from_pdf('./pdf/', item['pdf'], './image/')
-                tweet(item['title'], './image/'+item['pdf']+'0.jpg')
+                tweet(item['title'], './image/'+item['pdf']+'0.png')
             else:
                 print('No Changes: ', item['pdf'])
         time.sleep(random.randint(1800, 3600))  # wait 30 to 60 minutes
