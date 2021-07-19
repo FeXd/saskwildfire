@@ -11,23 +11,25 @@ from dotenv import load_dotenv
 
 tweet_url = 'https://saskatchewan.ca/fire'
 
-fire_url = 'http://environment.gov.sk.ca/firefiles/'
-
 fire_data = [
     {
         'pdf': 'activefires.pdf',
+        'path': 'http://environment.gov.sk.ca/firefiles/',
         'title': 'Saskatchewan Daily Wildfire Situation Map',
     },
     {
         'pdf': 'MunicipalFireBans.pdf',
+        'path': 'http://environment.gov.sk.ca/firefiles/',
         'title': 'Saskatchewan Fire Ban Map',
     },
     {
-        'pdf': 'DailyFireDangerMaps/today_fwi.pdf',
+        'pdf': 'today_fwi.pdf',
+        'path': 'http://environment.gov.sk.ca/firefiles/DailyFireDangerMaps/',
         'title': "Saskatchewan Spatial Fire Management System: Today's Forecast",
     },
     {
-        'pdf': 'DailyFireDangerMaps/tomorrow_fwi.pdf',
+        'pdf': 'tomorrow_fwi.pdf',
+        'path': 'http://environment.gov.sk.ca/firefiles/DailyFireDangerMaps/',
         'title': "Saskatchewan Spatial Fire Management System: Tomorrow Forecast",
     },
 ]
@@ -83,7 +85,7 @@ if __name__ == '__main__':
             time.sleep(random.randint(60, 120))  # wait 1 or 2 minutes
             move_file('./pdf/', item['pdf'], './pdf_old/')
             move_file('./image/', item['pdf']+'0.png', './image_old/')
-            download_file(fire_url, './pdf/', item['pdf'])
+            download_file(item['path'], './pdf/', item['pdf'])
             if not os.path.isfile('./pdf_old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './pdf_old/' + item['pdf'], shallow=True):
                 log('PDF is different: ', item['pdf'])
                 generate_images_from_pdf('./pdf/', item['pdf'], './image/')
