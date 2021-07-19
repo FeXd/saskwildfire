@@ -66,13 +66,17 @@ def tweet(title, image):
     try:
         api = tweepy.API(auth)
         api.update_with_media(image, status)
-        print('Tweet:', status.replace('\n', ''))
+        log('Tweet:', status.replace('\n', ''))
     except tweepy.TweepError as error:
-        print('Error: update_status: Something went wrong!', error)
+        log('Error: update_status: Something went wrong!', error)
+
+
+def log(text1, text2='', text3=''):
+    print(f"{datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')}: {text1} {text2} {text3}")
 
 
 if __name__ == '__main__':
-    print('Sask Wildfire Bot is now running...')
+    log('Sask Wildfire Bot is now running...')
     load_dotenv()
     while True:
         for item in fire_data:
@@ -80,10 +84,11 @@ if __name__ == '__main__':
             move_file('./pdf/', item['pdf'], './old/')
             download_file(fire_url, './pdf/', item['pdf'])
             if not os.path.isfile('./old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './old/' + item['pdf'], shallow=True):
-                print('Updated File!', item['pdf'])
+                log('Updated File!', item['pdf'])
                 generate_images_from_pdf('./pdf/', item['pdf'], './image/')
                 tweet(item['title'], './image/'+item['pdf']+'0.png')
                 image_history('./image/', item['pdf']+'0.png', './history/')
             else:
-                print('No Changes: ', item['pdf'])
+                log('No Changes: ', item['pdf'])
         time.sleep(random.randint(1800, 3600))  # wait 30 to 60 minutes
+
