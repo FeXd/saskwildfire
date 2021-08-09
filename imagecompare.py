@@ -6,7 +6,6 @@ import numpy as np
 
 before = cv2.imread('image/activefires.pdf0.png')
 after = cv2.imread('image_old/activefires.pdf0.png')
-changes = cv2.imread('image/changes.png')
 
 # Convert images to grayscale
 before_gray = cv2.cvtColor(before, cv2.COLOR_BGR2GRAY)
@@ -40,10 +39,20 @@ for c in contours:
         cv2.drawContours(mask, [c], 0, (0,255,0), -1)
         cv2.drawContours(filled_after, [c], 0, (0,255,0), -1)
 
-v_img = cv2.vconcat([changes, after])
+changes_top = cv2.imread('image/changes.png')
+previous_top = cv2.imread('image/previous.png')
+current_top = cv2.imread('image/current.png')
 
-cv2.imshow('before', before)
-cv2.imshow('after', after)
-cv2.imshow('Vertical', v_img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+new_img = cv2.vconcat([changes_top, after])
+previous_img = cv2.vconcat([previous_top, before])
+current_img = cv2.vconcat([current_top, after])
+both_img = cv2.hconcat([previous_img, current_img])
+
+# cv2.imshow('before', before)
+# cv2.imshow('after', after)
+# cv2.imshow('Vertical', v_img)
+cv2.imwrite('./image/changes.png', new_img)
+cv2.imwrite('./image/both.png', both_img)
+
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()

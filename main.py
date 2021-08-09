@@ -9,6 +9,7 @@ import random
 from pdf2image import convert_from_path
 from dotenv import load_dotenv
 
+
 tweet_url = 'https://saskatchewan.ca/fire'
 
 fire_data = [
