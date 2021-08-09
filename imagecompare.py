@@ -6,6 +6,7 @@ import numpy as np
 
 before = cv2.imread('image/activefires.pdf0.png')
 after = cv2.imread('image_old/activefires.pdf0.png')
+changes = cv2.imread('image/changes.png')
 
 # Convert images to grayscale
 before_gray = cv2.cvtColor(before, cv2.COLOR_BGR2GRAY)
@@ -34,14 +35,15 @@ for c in contours:
     area = cv2.contourArea(c)
     if area > 40:
         x,y,w,h = cv2.boundingRect(c)
-        cv2.rectangle(before, (x, y), (x + w, y + h), (36,255,12), 2)
-        cv2.rectangle(after, (x, y), (x + w, y + h), (36,255,12), 2)
+        cv2.rectangle(before, (x, y), (x + w, y + h), (36,255,12), 10)
+        cv2.rectangle(after, (x, y), (x + w, y + h), (36,255,12), 10)
         cv2.drawContours(mask, [c], 0, (0,255,0), -1)
         cv2.drawContours(filled_after, [c], 0, (0,255,0), -1)
 
+v_img = cv2.vconcat([changes, after])
+
 cv2.imshow('before', before)
 cv2.imshow('after', after)
-cv2.imshow('diff',diff)
-cv2.imshow('mask',mask)
-cv2.imshow('filled after',filled_after)
+cv2.imshow('Vertical', v_img)
 cv2.waitKey(0)
+cv2.destroyAllWindows()
