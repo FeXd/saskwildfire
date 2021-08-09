@@ -2,3 +2,6 @@ requests
 tweepy
 python-dotenv
 pdf2image
+scikit-image
+opencv-python
+numpy
