@@ -7,6 +7,7 @@ import time
 import datetime
 import random
 from pdf2image import convert_from_path
+from pdf2image.exceptions import PDFPageCountError
 from dotenv import load_dotenv
 
 tweet_url = 'https://saskatchewan.ca/fire'
@@ -48,10 +49,13 @@ def move_file(path, file, new_path):
 
 
 def generate_images_from_pdf(in_path, pdf, out_path):
-    images = convert_from_path(in_path+pdf)
-    for i, image in enumerate(images):
-        filename = pdf+str(i)+'.png'
-        image.save(out_path+filename, "PNG")
+    try:
+        images = convert_from_path(in_path+pdf)
+        for i, image in enumerate(images):
+            filename = pdf+str(i)+'.png'
+            image.save(out_path+filename, "PNG")
+    except PDFPageCountError as error:
+        log("Error: generate_images_from_pdf!", error)
 
 
 def image_history(path, image, new_path):
