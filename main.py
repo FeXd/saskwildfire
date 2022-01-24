@@ -19,6 +19,11 @@ fire_data = [
         'title': 'Saskatchewan Daily Wildfire Situation Map',
     },
     {
+        'pdf': 'firestodate.pdf',
+        'path': 'http://environment.gov.sk.ca/firefiles/',
+        'title': 'Fires to Date',
+    },
+    {
         'pdf': 'MunicipalFireBans.pdf',
         'path': 'http://environment.gov.sk.ca/firefiles/',
         'title': 'Saskatchewan Fire Ban Map',
