@@ -43,6 +43,7 @@ This tool has been created independently and is not associated with the _Governm
 - [https://www.saskpublicsafety.ca/emergencies-and-response](https://www.saskpublicsafety.ca/emergencies-and-response)
 - [https://www.saskpublicsafety.ca/emergencies-and-response/wildfire-status](https://www.saskpublicsafety.ca/emergencies-and-response/wildfire-status)
 - [http://environment.gov.sk.ca/firefiles/activefires.pdf](http://environment.gov.sk.ca/firefiles/activefires.pdf)
+- [http://environment.gov.sk.ca/firefiles/firestodate.pdf](http://environment.gov.sk.ca/firefiles/firestodate.pdf)
 - [http://environment.gov.sk.ca/firefiles/MunicipalFireBans.pdf](http://environment.gov.sk.ca/firefiles/MunicipalFireBans.pdf)
 - [http://environment.gov.sk.ca/firefiles/DailyFireDangerMaps/today_fwi.pdf](http://environment.gov.sk.ca/firefiles/DailyFireDangerMaps/today_fwi.pdf)
 - [http://environment.gov.sk.ca/firefiles/DailyFireDangerMaps/tomorrow_fwi.pdf](http://environment.gov.sk.ca/firefiles/DailyFireDangerMaps/tomorrow_fwi.pdf)
