@@ -21,7 +21,7 @@ fire_data = [
     {
         'pdf': 'firestodate.pdf',
         'path': 'http://environment.gov.sk.ca/firefiles/',
-        'title': 'Daily Wildfire Situation Map',
+        'title': 'Fires to Date',
     },
     {
         'pdf': 'MunicipalFireBans.pdf',
