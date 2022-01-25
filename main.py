@@ -1,4 +1,5 @@
 import requests
+from requests.exceptions import RequestException
 import shutil
 import filecmp
 import os
@@ -42,10 +43,16 @@ fire_data = [
 
 
 def download_file(url, path, file):
-    response = requests.get(url+file, stream=True)
-    write_file = open(path+file, 'wb')
-    write_file.write(response.content)
-    write_file.close()
+    try:
+        response = requests.get(url+file, stream=True, timeout=30)
+        write_file = open(path+file, 'wb')
+        write_file.write(response.content)
+        write_file.close()
+        return True
+    # All exceptions that Requests explicitly raises inherit from requests.exceptions.RequestException.
+    except RequestException as error: 
+        log('RequestException: download_file: ' + url+file, error)
+        return False
 
 
 def move_file(path, file, new_path):
@@ -95,16 +102,19 @@ if __name__ == '__main__':
             time.sleep(random.randint(60, 120))  # wait 1 or 2 minutes
             move_file('./pdf/', item['pdf'], './pdf_old/')
             move_file('./image/', item['pdf']+'0.png', './image_old/')
-            download_file(item['path'], './pdf/', item['pdf'])
-            if not os.path.isfile('./pdf_old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './pdf_old/' + item['pdf'], shallow=True):
-                log('PDF is different: ', item['pdf'])
-                generate_images_from_pdf('./pdf/', item['pdf'], './image/')
-                image_history('./image/', item['pdf'] + '0.png', './history/')
-                if not os.path.isfile('./image_old/'+item['pdf']+'0.png') or not filecmp.cmp('./image/' + item['pdf'] + '0.png', './image_old/' + item['pdf'] + '0.png', shallow=False):
-                    tweet(item['title'], './image/'+item['pdf']+'0.png')
+            if download_file(item['path'], './pdf/', item['pdf']):
+                if not os.path.isfile('./pdf_old/'+item['pdf']) or not filecmp.cmp('./pdf/' + item['pdf'], './pdf_old/' + item['pdf'], shallow=True):
+                    log('PDF is different: ', item['pdf'])
+                    generate_images_from_pdf('./pdf/', item['pdf'], './image/')
+                    image_history('./image/', item['pdf'] + '0.png', './history/')
+                    if not os.path.isfile('./image_old/'+item['pdf']+'0.png') or not filecmp.cmp('./image/' + item['pdf'] + '0.png', './image_old/' + item['pdf'] + '0.png', shallow=False):
+                        # tweet(item['title'], './image/'+item['pdf']+'0.png')
+                        log('Do not tweet, just testing.')
+                    else:
+                        log('No Image Changes: ', item['pdf'])
                 else:
-                    log('No Image Changes: ', item['pdf'])
+                    log('No PDF Changes: ', item['pdf'])
             else:
-                log('No PDF Changes: ', item['pdf'])
+                log('File Download Issue: ', item['pdf'])
         time.sleep(random.randint(1800, 3600))  # wait 30 to 60 minutes
 
