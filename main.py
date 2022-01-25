@@ -108,8 +108,7 @@ if __name__ == '__main__':
                     generate_images_from_pdf('./pdf/', item['pdf'], './image/')
                     image_history('./image/', item['pdf'] + '0.png', './history/')
                     if not os.path.isfile('./image_old/'+item['pdf']+'0.png') or not filecmp.cmp('./image/' + item['pdf'] + '0.png', './image_old/' + item['pdf'] + '0.png', shallow=False):
-                        # tweet(item['title'], './image/'+item['pdf']+'0.png')
-                        log('Do not tweet, just testing.')
+                        tweet(item['title'], './image/'+item['pdf']+'0.png')
                     else:
                         log('No Image Changes: ', item['pdf'])
                 else:
